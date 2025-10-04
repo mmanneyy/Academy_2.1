@@ -83,7 +83,7 @@ class SinglyLinkedList {
     pop_back() {
         if(!this.#head) return undefined;
         if(this.#size === 1) {
-            res = this.#head;
+            let res = this.#head;
             this.#head = null;
             this.#tail = null;
             this.#size--;
@@ -210,7 +210,19 @@ class SinglyLinkedList {
 
     reverse() {
         if(this.#size <= 1) return;
+        let headCpy = this.#head;
+        let prev = null;
+        let n;
 
+        while(headCpy) {
+            n = headCpy.next;
+            headCpy.next = prev;
+            prev = headCpy;
+            headCpy = n;
+        }
+        this.#tail = this.#head;
+        this.#head = prev;
+        return this.#head;
     }
 
     merge(left, right) {
