@@ -1,4 +1,3 @@
-//NEED TO FINSIH
 const MAGIC_NUMBERS = {
     ZERO: 0
 }
@@ -35,6 +34,14 @@ class LinkedList {
         this.#head = this.#tail = null;
         this.#size = 0;
     }
+
+    //FRONT ACCESS 
+    front() {
+        if(!this.#head) return undefined;
+        return this.#head.data;
+    }
+
+    //PUSH AND POP
     push_front(value) {
         const n = new Node(value);
         if(!this.#size) {
@@ -47,6 +54,7 @@ class LinkedList {
         this.#head = n;
         this.#size++;
     }
+
     push_back(value) {
         const n = new Node(value);
         if(!this.#size) {
@@ -55,12 +63,12 @@ class LinkedList {
         } else {
             n.prev = this.#tail;
             this.#tail.next = n;
-            this.#tail.next = n;
         }
 
         this.#tail = n;
         this.#size++;
     }
+
     pop_front() {
         if(!this.#size) return null;
         const n = this.#head.data;
@@ -89,16 +97,14 @@ class LinkedList {
         return res;
     }
 
-    front() {
-        if(!this.#head) return undefined;
-        return this.#head.data;
-    }
+    
 
     back() {
         if(!this.#head) return undefined;
         return this.#tail.data;
     }
 
+    //RANDOM-LIKE OPERATIONS O(n)
     at(index) {
         let counter = 0;
         let headCpy = this.#head;
@@ -241,18 +247,62 @@ class LinkedList {
     }
 
     remove(value, equals = Object.is) {
-        
+        let headCpy = this.#head;
+        while(headCpy) {
+            if(equals) {
+                if(equals(headCpy.data, value)) {
+                    headCpy.prev.next = headCpy.next;
+                    headCpy.next.prev = headCpy.prev;
+                }
+        }
+        return;
+        }
     }
 
+
+    //ALGORITHMS
+
     reverse() {
+        if(!this.#head) return undefined;
+        let headCpy = this.#head;
+        let n = null;
+        while(headCpy) {
+            n = headCpy.next;
+            headCpy.next = headCpy.prev;
+            headCpy.prev = n;
+            headCpy = headCpy.prev;
+        }
+            n = this.#head;
+            this.#head = this.#tail;
+            this.#tail = n;
     }
     
     sort(compareFn) {
         this.#head = this.mergeSort(this.#head);
-    }
 
-    merge(left, rigth) {
+        let node = this.#head;
+        while (node && node.next) node = node.next;
+        this.#tail = node;
+        }
+
+    merge(left, right) {   
+        if (!left) return right;
+        if (!right) return left;
         
+        let result;
+        
+        if (left.data <= right.data) {
+            result = left;
+            result.next = this.merge(left.next, right);
+            if (result.next) result.next.prev = result;
+        } else {
+            result = right;
+            result.next = this.merge(left, right.next);
+            if (result.next) result.next.prev = result;
+        }
+
+    result.prev = null;
+    return result;
     }
 
     mergeSort(head) {
@@ -291,36 +341,35 @@ class LinkedList {
         curr = curr.next;
     }
     console.log(result.join(' -> '));
+    }
+
 }
 
-  }
+// const list = new LinkedList();
 
-const list = new LinkedList();
+// // Insert into empty list
+// list.insert(0, 10); 
+// list.print(); // 10
 
-// Insert into empty list
-list.insert(0, 10); 
-list.print(); // 10
+// // Insert at front
+// list.insert(0, 5);  
+// list.print(); // 5 -> 10
 
-// Insert at front
-list.insert(0, 5);  
-list.print(); // 5 -> 10
+// // Insert at back
+// list.insert(list.size(), 20); 
+// list.print(); // 5 -> 10 -> 20
 
-// Insert at back
-list.insert(list.size(), 20); 
-list.print(); // 5 -> 10 -> 20
+// // Insert in the middle
+// list.insert(1, 7);  
+// list.print(); // 5 -> 7 -> 10 -> 20
 
-// Insert in the middle
-list.insert(1, 7);  
-list.print(); // 5 -> 7 -> 10 -> 20
+// list.insert(2, 8);  
+// list.print(); // 5 -> 7 -> 8 -> 10 -> 20
 
-list.insert(2, 8);  
-list.print(); // 5 -> 7 -> 8 -> 10 -> 20
+// // Insert near the end
+// list.insert(4, 15);  
+// list.print(); // 5 -> 7 -> 8 -> 10 -> 15 -> 20
 
-// Insert near the end
-list.insert(4, 15);  
-list.print(); // 5 -> 7 -> 8 -> 10 -> 15 -> 20
-
-// Edge case: insert at size again (back)
-list.insert(list.size(), 25);  
-list.print(); // 5 -> 7 -> 8 -> 10 -> 15 -> 20 -> 25
-
+// // Edge case: insert at size again (back)
+// list.insert(list.size(), 25);  
+// list.print(); // 5 -> 7 -> 8 -> 10 -> 15 -> 20 -> 25

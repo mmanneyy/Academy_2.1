@@ -20,10 +20,6 @@ class SinglyLinkedList {
                 this.push_back(elem);
             }
         }
-
-
-
-
     }
 
     size() {
